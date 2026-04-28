@@ -4,6 +4,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import com.dogac.common_events.event.CartItemAddedEvent;
+import com.dogac.common_events.event.CartItemQuantityUpdatedEvent;
 import com.dogac.common_events.event.CartItemRemovedEvent;
 
 @Component
@@ -22,4 +23,9 @@ public class KafkaEventPublisher {
     public void publishRemoveCartItem(CartItemRemovedEvent event) {
         kafkaTemplate.send("cart-item-removed", event);
     }
+
+    public void publishCartItemUpdated(CartItemQuantityUpdatedEvent event) {
+        kafkaTemplate.send("cart-item-updated", event);
+    }
+
 }

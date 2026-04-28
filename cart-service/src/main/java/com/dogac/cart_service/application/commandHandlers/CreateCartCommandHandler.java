@@ -9,7 +9,6 @@ import com.dogac.cart_service.application.commands.CreateCartCommand;
 import com.dogac.cart_service.application.core.CommandHandler;
 import com.dogac.cart_service.application.dto.CreatedCartResponse;
 import com.dogac.cart_service.application.mapper.CreatedCartResponseMapper;
-import com.dogac.cart_service.application.security.CurrentUserService;
 import com.dogac.cart_service.domain.cart.Cart;
 import com.dogac.cart_service.domain.enums.Currency;
 import com.dogac.cart_service.domain.repositories.CartRepository;
@@ -20,19 +19,17 @@ public class CreateCartCommandHandler implements CommandHandler<CreateCartComman
 
     private final CartRepository cartRepository;
     private final CreatedCartResponseMapper createdCartResponseMapper;
-    private final CurrentUserService currentUserService;
 
-    public CreateCartCommandHandler(CartRepository cartRepository, CreatedCartResponseMapper createdCartResponseMapper,
-            CurrentUserService currentUserService) {
+    public CreateCartCommandHandler(CartRepository cartRepository,
+            CreatedCartResponseMapper createdCartResponseMapper) {
         this.cartRepository = cartRepository;
         this.createdCartResponseMapper = createdCartResponseMapper;
-        this.currentUserService = currentUserService;
     }
 
     @Override
     @Transactional
     public CreatedCartResponse handle(CreateCartCommand command) {
-        UserId userId = currentUserService.getUserId();
+        UserId userId = UserId.from(command.userId());
         Currency currencyType = command.currency();
 
         Optional<Cart> existingCart = cartRepository.findByUserId(userId);

@@ -1,4 +1,4 @@
-package com.dogac.product_service.infrastructure.kafka.cart;
+package com.dogac.product_service.infrastructure.kafka.cart.dto;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;

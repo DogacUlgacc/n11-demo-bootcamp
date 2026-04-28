@@ -1,5 +1,7 @@
 package com.dogac.cart_service.application.commandHandlers;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 import com.dogac.cart_service.application.commands.AddItemToCartCommand;
@@ -7,7 +9,6 @@ import com.dogac.cart_service.application.core.CommandHandler;
 import com.dogac.cart_service.application.dto.feignDto.ProductDto;
 import com.dogac.cart_service.application.exception.NotEnoughStockException;
 import com.dogac.cart_service.application.port.ProductPort;
-import com.dogac.cart_service.application.security.CurrentUserService;
 import com.dogac.cart_service.domain.cart.Cart;
 import com.dogac.cart_service.domain.exceptions.CartNotFoundException;
 import com.dogac.cart_service.domain.repositories.CartRepository;
@@ -24,22 +25,19 @@ public class AddItemToCartCommandHandler implements CommandHandler<AddItemToCart
     private final CartRepository cartRepository;
     private final ProductPort productPort;
     private final KafkaEventPublisher kafkaEventPublisher;
-    private final CurrentUserService currentUserService;
 
     public AddItemToCartCommandHandler(CartRepository cartRepository, ProductPort productPort,
-            KafkaEventPublisher kafkaEventPublisher, CurrentUserService currentUserService) {
+            KafkaEventPublisher kafkaEventPublisher) {
         this.cartRepository = cartRepository;
         this.productPort = productPort;
         this.kafkaEventPublisher = kafkaEventPublisher;
-        this.currentUserService = currentUserService;
     }
 
     @Override
     public Void handle(AddItemToCartCommand command) {
         System.out.println("AddItemToCartCommand handle()");
-
-        UserId userId = currentUserService.getUserId();
-        System.out.println("currentUserService ile gelen userId: " + userId);
+        /* TODO:// DAHA SONRA SECURİTY İLE HALLEDECEĞİZ */
+        UserId userId = new UserId(UUID.fromString("07ed7f7a-1340-431a-a564-f1932498dc99"));
 
         Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new CartNotFoundException("No cart found"));
 
