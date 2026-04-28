@@ -5,7 +5,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/DogacUlgacc/Smart-spend
+          uri: https://github.com/DogacUlgacc/n11-demo-bootcamp
           # default-label: main
           search-paths:
             - config-server
