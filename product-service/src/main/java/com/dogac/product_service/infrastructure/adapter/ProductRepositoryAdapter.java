@@ -3,11 +3,17 @@ package com.dogac.product_service.infrastructure.adapter;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.dogac.product_service.domain.entities.Product;
 import com.dogac.product_service.domain.repositories.ProductRepository;
+import com.dogac.product_service.domain.valueobjects.Description;
 import com.dogac.product_service.domain.valueobjects.ProductId;
+import com.dogac.product_service.domain.valueobjects.ProductName;
+import com.dogac.product_service.domain.valueobjects.StockQuantity;
+import com.dogac.product_service.infrastructure.entities.JpaProductEntity;
 import com.dogac.product_service.infrastructure.mapper.ProductEntityMapper;
 import com.dogac.product_service.infrastructure.repositories.SpringDataProductRepository;
 
@@ -55,6 +61,23 @@ public class ProductRepositoryAdapter implements ProductRepository {
     @Override
     public boolean existsByName(String name) {
         return springDataProductRepository.existsByProductName(name);
+    }
+
+    @Override
+    public Page<Product> findAll(Pageable pageable) {
+
+        Page<JpaProductEntity> entityPage = springDataProductRepository.findAll(pageable);
+
+        return entityPage.map(this::toDomain);
+    }
+
+    private Product toDomain(JpaProductEntity entity) {
+        return new Product(
+                new ProductId(entity.getId()),
+                new ProductName(entity.getProductName()),
+                new Description(entity.getProductDescription()),
+                entity.getPrice(), // Zaten Money nesnesi ise doğrudan verilir
+                new StockQuantity(entity.getStockQuantity()));
     }
 
 }

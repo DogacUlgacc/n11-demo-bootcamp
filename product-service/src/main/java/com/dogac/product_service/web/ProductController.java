@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dogac.product_service.application.bus.CommandBus;
@@ -20,11 +21,13 @@ import com.dogac.product_service.application.commands.CreateProductCommand;
 import com.dogac.product_service.application.commands.DeleteProductCommand;
 import com.dogac.product_service.application.commands.UpdateProductCommand;
 import com.dogac.product_service.application.dto.CreatedProductResponse;
+import com.dogac.product_service.application.dto.PaginatedProductResponse;
 import com.dogac.product_service.application.dto.ProductResponse;
 import com.dogac.product_service.application.dto.UpdateProductRequest;
 import com.dogac.product_service.application.dto.UpdatedProductResponse;
 import com.dogac.product_service.application.queries.GetProductByIdQuery;
 import com.dogac.product_service.application.queries.GetProductListQuery;
+import com.dogac.product_service.application.queries.GetProductPageQuery;
 
 import jakarta.validation.Valid;
 
@@ -54,11 +57,21 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<List<ProductResponse>> getProductList() {
         GetProductListQuery query = new GetProductListQuery();
         List<ProductResponse> responseList = queryBus.execute(query);
         return ResponseEntity.ok(responseList);
+    }
+
+    @GetMapping()
+    public ResponseEntity<PaginatedProductResponse> getProducts(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+        GetProductPageQuery query = new GetProductPageQuery(page, size, sortBy, direction);
+        return ResponseEntity.ok(queryBus.execute(query));
     }
 
     @PutMapping("/{id}")

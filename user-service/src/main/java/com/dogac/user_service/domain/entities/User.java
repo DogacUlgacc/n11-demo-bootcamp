@@ -74,7 +74,7 @@ public class User implements AggregateRoot<UserId> {
     // }
 
     public static User create(
-            UserId id,
+
             FullName fullName,
             Email email,
             PhoneNumber phoneNumber,
@@ -82,7 +82,7 @@ public class User implements AggregateRoot<UserId> {
         Instant now = Instant.now();
 
         return new User(
-                id,
+                UserId.generate(),
                 Objects.requireNonNull(fullName),
                 Objects.requireNonNull(email),
                 Objects.requireNonNull(phoneNumber),
