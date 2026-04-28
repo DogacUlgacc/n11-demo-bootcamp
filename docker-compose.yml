@@ -115,11 +115,24 @@ services:
       - "5438:5432"
     volumes:
       - cartdb_vol:/var/lib/postgresql/data
+  orderssv_db:
+    container_name: orderssv_db
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: order_db
+      POSTGRES_PASSWORD: order-password
+    ports:
+      - "5439:5432"
+    volumes:
+      - orderdb_vol:/var/lib/postgresql/data
 
 volumes:
   productdb_vol:
   userdb_vol:
   cartdb_vol:
+  orderdb_vol:
   kafka-data:
   postgres_data:
 networks:
