@@ -28,7 +28,6 @@ public class CreateOrderCommandHandler implements CommandHandler<CreateOrderComm
 
     @Override
     public CreatedOrderResponse handle(CreateOrderCommand command) {
-        // Client provides only required fields; order number is generated inside the system.
         OrderNumber orderNumber = OrderNumber.generate();
         orderDomainService.ensureOrderNumberIsUnique(orderNumber);
         Order order = createOrderMapper.toEntity(command, orderNumber);

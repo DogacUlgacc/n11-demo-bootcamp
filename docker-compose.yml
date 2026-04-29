@@ -127,10 +127,22 @@ services:
       - "5439:5432"
     volumes:
       - orderdb_vol:/var/lib/postgresql/data
-
+  paymentssv_db:
+    container_name: paymentssv_db
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: payment_db
+      POSTGRES_PASSWORD: payment-password
+    ports:
+      - "5440:5432"
+    volumes:
+      - paymentdb_vol:/var/lib/postgresql/data
 volumes:
   productdb_vol:
   userdb_vol:
+  paymentdb_vol:
   cartdb_vol:
   orderdb_vol:
   kafka-data:

@@ -3,8 +3,6 @@ package com.dogac.order_service.application.commandHandlers;
 import java.time.Instant;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.dogac.common_events.event.OrderCreatedEvent;
@@ -27,9 +25,11 @@ import com.dogac.order_service.infrastructure.KafkaEventPublisher;
 import com.dogac.order_service.infrastructure.feignclients.CartClient;
 import com.dogac.order_service.infrastructure.feignclients.UserClient;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class CreateCheckoutCommandHandler implements CommandHandler<CreateCheckoutCommand, CreatedOrderResponse> {
-    private static final Logger log = LoggerFactory.getLogger(CreateCheckoutCommandHandler.class);
 
     private final CreateOrderMapper createOrderMapper;
     private final OrderRepository orderRepository;
@@ -82,11 +82,11 @@ public class CreateCheckoutCommandHandler implements CommandHandler<CreateChecko
         OrderCreatedEvent event = new OrderCreatedEvent(
                 order.getId().value(),
                 order.getUserId().value(),
-                cartDto.cartId());
+                cartDto.cartId(),
+                saved.getTotalAmount(), cartDto.currency());
         log.info("orderCreatedEvent:" + event);
         kafkaEventPublisher.publisOrderCreated(event);
         log.info("Event gönderildi");
         return createOrderMapper.toResponse(saved);
     }
-
 }
