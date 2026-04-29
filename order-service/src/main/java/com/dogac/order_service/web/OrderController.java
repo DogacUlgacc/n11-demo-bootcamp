@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dogac.order_service.application.bus.CommandBus;
 import com.dogac.order_service.application.bus.QueryBus;
+import com.dogac.order_service.application.commands.CreateCheckoutCommand;
 import com.dogac.order_service.application.commands.CreateOrderCommand;
 import com.dogac.order_service.application.commands.DeleteOrderCommand;
 import com.dogac.order_service.application.commands.UpdateOrderCommand;
@@ -45,8 +46,15 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/checkout")
+    public ResponseEntity<CreatedOrderResponse> checkoutOrder(@RequestBody CreateCheckoutCommand command) {
+        CreatedOrderResponse response = commandBus.send(command);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<UpdatedOrderResponse> updateOrder(@PathVariable UUID id, @RequestBody @Valid UpdateOrderRequest request) {
+    public ResponseEntity<UpdatedOrderResponse> updateOrder(@PathVariable UUID id,
+            @RequestBody @Valid UpdateOrderRequest request) {
         UpdatedOrderResponse response = commandBus.send(new UpdateOrderCommand(id, request.status()));
         return ResponseEntity.ok(response);
     }
