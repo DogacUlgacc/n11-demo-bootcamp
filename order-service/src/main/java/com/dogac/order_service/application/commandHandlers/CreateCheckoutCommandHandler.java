@@ -3,8 +3,11 @@ package com.dogac.order_service.application.commandHandlers;
 import java.time.Instant;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.dogac.common_events.event.OrderCreatedEvent;
 import com.dogac.order_service.application.commands.CreateCheckoutCommand;
 import com.dogac.order_service.application.core.CommandHandler;
 import com.dogac.order_service.application.dto.CreatedOrderResponse;
@@ -20,27 +23,30 @@ import com.dogac.order_service.domain.valueobjects.OrderId;
 import com.dogac.order_service.domain.valueobjects.OrderItem;
 import com.dogac.order_service.domain.valueobjects.OrderNumber;
 import com.dogac.order_service.domain.valueobjects.UserId;
+import com.dogac.order_service.infrastructure.KafkaEventPublisher;
 import com.dogac.order_service.infrastructure.feignclients.CartClient;
 import com.dogac.order_service.infrastructure.feignclients.UserClient;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Component
-@Slf4j
 public class CreateCheckoutCommandHandler implements CommandHandler<CreateCheckoutCommand, CreatedOrderResponse> {
+    private static final Logger log = LoggerFactory.getLogger(CreateCheckoutCommandHandler.class);
+
     private final CreateOrderMapper createOrderMapper;
     private final OrderRepository orderRepository;
     private final OrderDomainService orderDomainService;
     private final UserClient userClient;
     private final CartClient cartClients;
+    private final KafkaEventPublisher kafkaEventPublisher;
 
     public CreateCheckoutCommandHandler(CreateOrderMapper createOrderMapper, OrderRepository orderRepository,
-            OrderDomainService orderDomainService, UserClient userClient, CartClient cartClients) {
+            OrderDomainService orderDomainService, UserClient userClient, CartClient cartClients,
+            KafkaEventPublisher kafkaEventPublisher) {
         this.createOrderMapper = createOrderMapper;
         this.orderRepository = orderRepository;
         this.orderDomainService = orderDomainService;
         this.userClient = userClient;
         this.cartClients = cartClients;
+        this.kafkaEventPublisher = kafkaEventPublisher;
     }
 
     public CreatedOrderResponse handle(CreateCheckoutCommand command) {
@@ -72,6 +78,14 @@ public class CreateCheckoutCommandHandler implements CommandHandler<CreateChecko
                 Instant.now());
 
         Order saved = orderRepository.save(order);
+
+        OrderCreatedEvent event = new OrderCreatedEvent(
+                order.getId().value(),
+                order.getUserId().value(),
+                cartDto.cartId());
+        log.info("orderCreatedEvent:" + event);
+        kafkaEventPublisher.publisOrderCreated(event);
+        log.info("Event gönderildi");
         return createOrderMapper.toResponse(saved);
     }
 

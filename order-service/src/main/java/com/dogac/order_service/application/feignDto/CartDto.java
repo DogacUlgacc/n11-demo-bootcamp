@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record CartDto(
-        UUID id,
+        UUID cartId,
         UUID userId,
         String currency,
         List<CartItemDto> items) {
