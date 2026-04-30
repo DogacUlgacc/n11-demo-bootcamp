@@ -21,9 +21,9 @@ import com.dogac.order_service.domain.valueobjects.OrderId;
 import com.dogac.order_service.domain.valueobjects.OrderItem;
 import com.dogac.order_service.domain.valueobjects.OrderNumber;
 import com.dogac.order_service.domain.valueobjects.UserId;
-import com.dogac.order_service.infrastructure.KafkaEventPublisher;
 import com.dogac.order_service.infrastructure.feignclients.CartClient;
 import com.dogac.order_service.infrastructure.feignclients.UserClient;
+import com.dogac.order_service.infrastructure.kafka.KafkaEventPublisher;
 
 import lombok.extern.slf4j.Slf4j;
 

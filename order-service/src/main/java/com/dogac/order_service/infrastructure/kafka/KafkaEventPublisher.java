@@ -1,4 +1,4 @@
-package com.dogac.order_service.infrastructure;
+package com.dogac.order_service.infrastructure.kafka;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

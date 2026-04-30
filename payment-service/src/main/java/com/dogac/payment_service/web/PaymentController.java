@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dogac.payment_service.application.bus.CommandBus;
 import com.dogac.payment_service.application.bus.QueryBus;
+import com.dogac.payment_service.application.commands.CompletePaymentCommand;
 import com.dogac.payment_service.application.commands.CreatePendingPaymentCommand;
+import com.dogac.payment_service.application.commands.FailPaymentCommand;
 import com.dogac.payment_service.application.dto.CreatedPaymentResponse;
 import com.dogac.payment_service.application.dto.PaymentResponse;
 import com.dogac.payment_service.application.queries.GetAllPaymentsQuery;
@@ -36,6 +38,20 @@ public class PaymentController {
     public ResponseEntity<CreatedPaymentResponse> createPayment(@RequestBody CreatePendingPaymentCommand command) {
         CreatedPaymentResponse response = commandBus.send(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/{paymentId}/complete")
+    public ResponseEntity<PaymentResponse> complete(@PathVariable UUID paymentId) {
+        PaymentResponse response = commandBus.send(new CompletePaymentCommand(paymentId, "mock-payment-provider"));
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{paymentId}/fail")
+    public ResponseEntity<PaymentResponse> fail(@PathVariable UUID paymentId) {
+        PaymentResponse response = commandBus.send(
+                new FailPaymentCommand(paymentId, "Mock payment failed"));
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")

@@ -81,6 +81,16 @@ public class Payment implements AggregateRoot<PaymentId> {
         touch();
     }
 
+    public void complete(String providerPaymentId) {
+        if (this.status != PaymentStatus.PENDING) {
+            throw new IllegalStateException("Only pending payment can be completed");
+        }
+
+        this.status = PaymentStatus.COMPLETED;
+        this.providerPaymentId = ProviderPaymentId.from(providerPaymentId);
+        this.updatedAt = Instant.now();
+    }
+
     public void fail() {
         if (status == PaymentStatus.COMPLETED) {
             throw new IllegalStateException("Completed payment cannot be failed");
@@ -88,6 +98,14 @@ public class Payment implements AggregateRoot<PaymentId> {
 
         status = PaymentStatus.FAILED;
         touch();
+    }
+
+    public void fail(String reason) {
+        if (this.status != PaymentStatus.PENDING) {
+            throw new IllegalStateException("Only pending payment can be failed");
+        }
+        this.status = PaymentStatus.FAILED;
+        this.updatedAt = Instant.now();
     }
 
     public void cancel() {
