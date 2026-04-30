@@ -29,6 +29,10 @@ spring:
     username: payment_db
     password: payment-password
     driver-class-name: org.postgresql.Driver
+iyzico:
+  api-key: ${IYZICO_API_KEY}
+  secret-key: ${IYZICO_SECRET_KEY}
+  base-url: ${IYZICO_BASE_URL:https://sandbox-api.iyzipay.com}
 server:
   port: 8084
 eureka:

@@ -17,7 +17,9 @@ import com.dogac.payment_service.application.bus.QueryBus;
 import com.dogac.payment_service.application.commands.CompletePaymentCommand;
 import com.dogac.payment_service.application.commands.CreatePendingPaymentCommand;
 import com.dogac.payment_service.application.commands.FailPaymentCommand;
+import com.dogac.payment_service.application.commands.PayWithIyzicoCommand;
 import com.dogac.payment_service.application.dto.CreatedPaymentResponse;
+import com.dogac.payment_service.application.dto.PayWithIyzicoRequest;
 import com.dogac.payment_service.application.dto.PaymentResponse;
 import com.dogac.payment_service.application.queries.GetAllPaymentsQuery;
 import com.dogac.payment_service.application.queries.GetPaymentByIdQuery;
@@ -50,6 +52,22 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> fail(@PathVariable UUID paymentId) {
         PaymentResponse response = commandBus.send(
                 new FailPaymentCommand(paymentId, "Mock payment failed"));
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{paymentId}/pay")
+    public ResponseEntity<PaymentResponse> payWithIyzico(
+            @PathVariable UUID paymentId,
+            @RequestBody PayWithIyzicoRequest request) {
+        PaymentResponse response = commandBus.send(
+                new PayWithIyzicoCommand(
+                        paymentId,
+                        request.cardHolderName(),
+                        request.cardNumber(),
+                        request.expireMonth(),
+                        request.expireYear(),
+                        request.cvc()));
 
         return ResponseEntity.ok(response);
     }
