@@ -1,7 +1,5 @@
 package com.dogac.cart_service.application.commandHandlers;
 
-import java.util.UUID;
-
 import org.springframework.stereotype.Component;
 
 import com.dogac.cart_service.application.commands.AddItemToCartCommand;
@@ -37,9 +35,9 @@ public class AddItemToCartCommandHandler implements CommandHandler<AddItemToCart
     public Void handle(AddItemToCartCommand command) {
         System.out.println("AddItemToCartCommand handle()");
         /* TODO:// DAHA SONRA SECURİTY İLE HALLEDECEĞİZ */
-        UserId userId = new UserId(UUID.fromString("07ed7f7a-1340-431a-a564-f1932498dc99"));
 
-        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new CartNotFoundException("No cart found"));
+        Cart cart = cartRepository.findByUserId(UserId.from(command.userId()))
+                .orElseThrow(() -> new CartNotFoundException("No cart found"));
 
         // Openfeign ile product-service'ten gelen product!
         ProductDto product = productPort.getProductById(command.productId());
