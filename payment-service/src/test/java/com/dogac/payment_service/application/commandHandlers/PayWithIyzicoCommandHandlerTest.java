@@ -44,7 +44,8 @@ class PayWithIyzicoCommandHandlerTest {
     void shouldCompletePaymentWhenIyzicoReturnsSuccess() {
         TestKafkaEventPublisher kafkaEventPublisher = new TestKafkaEventPublisher();
         PayWithIyzicoCommandHandler handler = newHandler(kafkaEventPublisher);
-        Payment payment = Payment.create(OrderId.from(java.util.UUID.randomUUID()), Money.of(BigDecimal.valueOf(250), "TRY"));
+        Payment payment = Payment.create(OrderId.from(java.util.UUID.randomUUID()),
+                Money.of(BigDecimal.valueOf(250), "TRY"));
         PayWithIyzicoCommand command = commandFor(payment);
         when(paymentRepository.findById(PaymentId.from(command.paymentId()))).thenReturn(Optional.of(payment));
         when(paymentProviderClient.pay(any(Payment.class), any(CardInfo.class)))
@@ -69,7 +70,8 @@ class PayWithIyzicoCommandHandlerTest {
     void shouldFailPaymentWhenIyzicoReturnsFail() {
         TestKafkaEventPublisher kafkaEventPublisher = new TestKafkaEventPublisher();
         PayWithIyzicoCommandHandler handler = newHandler(kafkaEventPublisher);
-        Payment payment = Payment.create(OrderId.from(java.util.UUID.randomUUID()), Money.of(BigDecimal.valueOf(250), "TRY"));
+        Payment payment = Payment.create(OrderId.from(java.util.UUID.randomUUID()),
+                Money.of(BigDecimal.valueOf(250), "TRY"));
         PayWithIyzicoCommand command = commandFor(payment);
         when(paymentRepository.findById(PaymentId.from(command.paymentId()))).thenReturn(Optional.of(payment));
         when(paymentProviderClient.pay(any(Payment.class), any(CardInfo.class)))
@@ -112,7 +114,6 @@ class PayWithIyzicoCommandHandlerTest {
         private PaymentSucceededEvent paymentSucceededEvent;
         private PaymentFailedEvent paymentFailedEvent;
 
-        @SuppressWarnings("unchecked")
         TestKafkaEventPublisher() {
             super((KafkaTemplate<String, Object>) null);
         }

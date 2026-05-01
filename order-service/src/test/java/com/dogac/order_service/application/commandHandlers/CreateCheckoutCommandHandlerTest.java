@@ -107,7 +107,6 @@ class CreateCheckoutCommandHandlerTest {
     private static class TestKafkaEventPublisher extends KafkaEventPublisher {
         private OrderCreatedEvent orderCreatedEvent;
 
-        @SuppressWarnings("unchecked")
         TestKafkaEventPublisher() {
             super((KafkaTemplate<String, Object>) null);
         }

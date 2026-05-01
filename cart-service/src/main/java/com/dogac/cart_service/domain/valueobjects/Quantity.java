@@ -26,7 +26,7 @@ public record Quantity(Integer value) {
         if (quantity == null) {
             throw new IllegalArgumentException("Quantity cannot be null");
         }
-        return new Integer(quantity.value);
+        return (quantity.value);
     }
 
 }

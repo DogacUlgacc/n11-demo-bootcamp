@@ -1,7 +1,6 @@
 package com.dogac.cart_service.application.commandHandlers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -76,7 +75,6 @@ class AddItemToCartCommandHandlerTest {
     private static class TestKafkaEventPublisher extends KafkaEventPublisher {
         private CartItemAddedEvent cartItemAddedEvent;
 
-        @SuppressWarnings("unchecked")
         TestKafkaEventPublisher() {
             super((KafkaTemplate<String, Object>) null);
         }

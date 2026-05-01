@@ -72,7 +72,6 @@ class UpdateCartItemQuantityCommandHandlerTest {
     private static class TestKafkaEventPublisher extends KafkaEventPublisher {
         private CartItemQuantityUpdatedEvent cartItemQuantityUpdatedEvent;
 
-        @SuppressWarnings("unchecked")
         TestKafkaEventPublisher() {
             super((KafkaTemplate<String, Object>) null);
         }
