@@ -1,34 +1,5 @@
 spring:
-  kafka:
-    bootstrap-servers: localhost:9094
-    consumer:
-      group-id: product-service
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "com.dogac.common_events.event,com.dogac.common_events.enums"
-        spring.json.use.type.headers: true
   application:
     name: product-service
-  cloud:
-    config:
-      uri: http://localhost:8888
   config:
-    import: configserver:http://localhost:8787
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  datasource:
-    url: jdbc:postgresql://localhost:5436/product_db
-    username: product_db
-    password: product-password
-    driver-class-name: org.postgresql.Driver
-server:
-  port: 8081
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+    import: optional:configserver:http://localhost:8071

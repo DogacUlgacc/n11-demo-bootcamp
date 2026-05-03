@@ -1,57 +1,5 @@
-server:
-  port: 8888
-
 spring:
   application:
     name: gateway-server
   config:
-    import: configserver:${CONFIG_URI:http://localhost:8787}
-  cloud:
-    gateway:
-      globalcors:
-        cors-configurations:
-          "[/**]":
-            allowedOrigins:
-              - "http://localhost:3000"
-              - "http://127.0.0.1:3000"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders: "*"
-      routes:
-        - id: discovery-service-route
-          uri: lb://discovery-service
-          predicates:
-            - Path=/api/v1/discovery/**
-        - id: product-service
-          uri: lb://PRODUCT-SERVICE
-          predicates:
-            - Path=/api/v1/products/**
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/api/v1/users/**
-        - id: cart-service
-          uri: lb://CART-SERVICE
-          predicates:
-            - Path=/api/v1/carts/**
-        - id: order-service
-          uri: lb://ORDER-SERVICE
-          predicates:
-            - Path=/api/v1/orders/**
-        - id: payment-service
-          uri: lb://PAYMENT-SERVICE
-          predicates:
-            - Path=/api/v1/payments/**
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/n11-realm
-eureka:
-  instance:
-    hostname: localhost
-    prefer-ip-address: true
+    import: optional:configserver:http://localhost:8071

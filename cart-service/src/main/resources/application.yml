@@ -1,40 +1,5 @@
 spring:
-  kafka:
-    bootstrap-servers: localhost:9094
-
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        spring.json.add.type.headers: true
-    consumer:
-      group-id: cart-service
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "com.dogac.common_events.event,com.dogac.common_events.enums"
-        spring.json.use.type.headers: true
   application:
     name: cart-service
-  cloud:
-    config:
-      uri: http://localhost:8888
   config:
-    import: configserver:http://localhost:8787
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  datasource:
-    url: jdbc:postgresql://localhost:5438/cart_db
-    username: cart_db
-    password: cart-password
-    driver-class-name: org.postgresql.Driver
-server:
-  port: 8083
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+    import: optional:configserver:http://localhost:8071
