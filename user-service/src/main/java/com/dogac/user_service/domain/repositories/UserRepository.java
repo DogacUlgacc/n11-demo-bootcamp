@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.dogac.user_service.domain.entities.User;
 import com.dogac.user_service.domain.valueobjects.Email;
+import com.dogac.user_service.domain.valueobjects.ExternalId;
 import com.dogac.user_service.domain.valueobjects.PhoneNumber;
 import com.dogac.user_service.domain.valueobjects.UserId;
 
@@ -13,6 +14,8 @@ public interface UserRepository {
     User save(User user);
 
     Optional<User> findById(UserId id);
+
+    Optional<User> findByExternalId(ExternalId externalId);
 
     List<User> findAll();
 

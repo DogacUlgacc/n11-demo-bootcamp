@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,8 +23,10 @@ import com.dogac.user_service.application.commands.UpdateUserCommand;
 import com.dogac.user_service.application.dto.CreatedUserResponse;
 import com.dogac.user_service.application.dto.UpdateUserRequest;
 import com.dogac.user_service.application.dto.UpdatedUserResponse;
+import com.dogac.user_service.application.dto.UserIdentityResponse;
 import com.dogac.user_service.application.dto.UserResponse;
 import com.dogac.user_service.application.queries.GetAllUsersQuery;
+import com.dogac.user_service.application.queries.GetUserByExternalIdQuery;
 import com.dogac.user_service.application.queries.GetUserByIdQuery;
 
 import jakarta.validation.Valid;
@@ -40,8 +43,19 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<CreatedUserResponse> createUser(@RequestBody @Valid CreateUserCommand command) {
-        CreatedUserResponse response = commandBus.send(command);
+    public ResponseEntity<CreatedUserResponse> createUser(
+            @RequestHeader(value = "X-External-Id", required = false) String externalId,
+            @RequestBody @Valid CreateUserCommand command) {
+        CreateUserCommand commandWithExternalId = new CreateUserCommand(
+                command.firstName(),
+                command.lastName(),
+                command.email(),
+                command.phoneNumber(),
+                command.userType(),
+                command.addresses(),
+                externalId != null ? externalId : command.externalId());
+
+        CreatedUserResponse response = commandBus.send(commandWithExternalId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -72,6 +86,12 @@ public class UserController {
     public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
         GetUserByIdQuery query = new GetUserByIdQuery(id);
         UserResponse response = queryBus.execute(query);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/by-external-id/{externalId}")
+    public ResponseEntity<UserIdentityResponse> getUserByExternalId(@PathVariable String externalId) {
+        UserIdentityResponse response = queryBus.execute(new GetUserByExternalIdQuery(externalId));
         return ResponseEntity.ok(response);
     }
 

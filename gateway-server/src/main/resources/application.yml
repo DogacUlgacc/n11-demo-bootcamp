@@ -46,7 +46,11 @@ spring:
           uri: lb://PAYMENT-SERVICE
           predicates:
             - Path=/api/v1/payments/**
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/n11-realm
 eureka:
   instance:
     hostname: localhost

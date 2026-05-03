@@ -25,7 +25,9 @@ public record CreateUserCommand(
 
         @JsonProperty("userType") @NotNull(message = "User type is required") UserType userType,
 
-        @JsonProperty("addresses") @Valid List<Address> addresses) implements Command<CreatedUserResponse> {
+        @JsonProperty("addresses") @Valid List<Address> addresses,
+
+        @JsonProperty("externalId") String externalId) implements Command<CreatedUserResponse> {
     public CreateUserCommand {
         addresses = (addresses == null) ? List.of() : List.copyOf(addresses);
     }

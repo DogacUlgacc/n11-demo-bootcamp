@@ -11,6 +11,7 @@ import com.dogac.user_service.domain.entities.User;
 import com.dogac.user_service.domain.repositories.UserRepository;
 import com.dogac.user_service.domain.services.UserDomainService;
 import com.dogac.user_service.domain.valueobjects.Email;
+import com.dogac.user_service.domain.valueobjects.ExternalId;
 import com.dogac.user_service.domain.valueobjects.PhoneNumber;
 
 @Component
@@ -33,6 +34,10 @@ public class CreateUserCommandHandler
     public CreatedUserResponse handle(CreateUserCommand command) {
 
         User user = createUserMapper.toEntity(command);
+        if (command.externalId() != null && !command.externalId().isBlank()) {
+            user.attachExternalIdentity(new ExternalId(command.externalId()));
+        }
+
         userDomainService.ensureEmailIsUnique(new Email(command.email()));
         userDomainService.ensurePhoneNumberIsUnique(new PhoneNumber(command.phoneNumber()));
         userRepository.save(user);

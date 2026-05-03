@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.dogac.user_service.domain.entities.User;
 import com.dogac.user_service.domain.repositories.UserRepository;
 import com.dogac.user_service.domain.valueobjects.Email;
+import com.dogac.user_service.domain.valueobjects.ExternalId;
 import com.dogac.user_service.domain.valueobjects.PhoneNumber;
 import com.dogac.user_service.domain.valueobjects.UserId;
 import com.dogac.user_service.infrastructure.mapper.UserEntityMapper;
@@ -34,6 +35,11 @@ public class UserRepositoryAdapter implements UserRepository {
     @Override
     public Optional<User> findById(UserId id) {
         return springDataUserRepository.findById(id.value()).map(userEntityMapper::toDomain);
+    }
+
+    @Override
+    public Optional<User> findByExternalId(ExternalId externalId) {
+        return springDataUserRepository.findByExternalId(externalId.value()).map(userEntityMapper::toDomain);
     }
 
     @Override

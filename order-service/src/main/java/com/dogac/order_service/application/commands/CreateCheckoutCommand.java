@@ -6,7 +6,7 @@ import com.dogac.order_service.application.core.Command;
 import com.dogac.order_service.application.dto.CreatedOrderResponse;
 
 public record CreateCheckoutCommand(
-        UUID userId,
-        UUID cartId) implements Command<CreatedOrderResponse> {
+                UUID userId,
+                UUID cartId) implements Command<CreatedOrderResponse> {
 
 }

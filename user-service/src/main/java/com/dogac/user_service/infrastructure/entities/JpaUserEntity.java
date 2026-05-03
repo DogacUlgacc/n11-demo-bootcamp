@@ -34,7 +34,7 @@ public class JpaUserEntity {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "external_id")
+    @Column(name = "external_id", unique = true)
     private String externalId;
 
     @Column(name = "first_name", nullable = false)
