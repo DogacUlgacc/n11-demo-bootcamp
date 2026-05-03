@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: ${PAYMENT_DB_URL:jdbc:postgresql://localhost:5440/payment_db}
-    username: ${PAYMENT_DB_USERNAME:payment_db}
-    password: ${DB_PASSWORD:postgres}
+    url: jdbc:postgresql://localhost:5440/payment_db
+    username: payment_db
+    password: payment-password
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

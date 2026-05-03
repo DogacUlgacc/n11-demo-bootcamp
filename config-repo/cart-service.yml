@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: ${CART_DB_URL:jdbc:postgresql://localhost:5438/cart_db}
-    username: ${CART_DB_USERNAME:cart_db}
-    password: ${DB_PASSWORD:postgres}
+    url: jdbc:postgresql://localhost:5438/cart_db
+    username: cart_db
+    password: cart-password
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
